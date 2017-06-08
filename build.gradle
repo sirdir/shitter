@@ -8,20 +8,6 @@ sourceCompatibility = 1.8
 repositories {
     jcenter()
     mavenCentral()
-//    maven {
-//        url "http://mirrors.ibiblio.org/pub/mirrors/maven2"
-//    }
-//    maven {
-//        url "http://uk.maven.org/maven2"
-//    }
-}
-
-def groupsToRun(){
-    try{
-        return "$type"
-    }catch (MissingPropertyException ignored){
-        return 'http'
-    }
 }
 
 dependencies {

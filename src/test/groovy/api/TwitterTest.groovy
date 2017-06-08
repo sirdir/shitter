@@ -1,9 +1,6 @@
 package api
 
-import com.sun.xml.internal.bind.v2.TODO
-import spock.lang.Shared
-import spock.lang.Specification
-import spock.lang.Unroll
+import spock.lang.*
 import twitter4j.Status
 import twitter4j.TwitterException
 import twitter4j.TwitterFactory
@@ -40,7 +37,7 @@ class TwitterTest extends Specification {
         text << ['E = mc^2', 'Привет, Твиттер! #мойпервыйТвит']
     }
 
-    def "Update status"(){
+    def "twit something"(){
         setup:
         def textOfTwit = 'something'
         def errCode = 403
@@ -48,6 +45,7 @@ class TwitterTest extends Specification {
 
         when:
         Status status = twitter.updateStatus(textOfTwit)
+        def id = status.getId()
 
         then:
         status
@@ -60,20 +58,19 @@ class TwitterTest extends Specification {
         e.getStatusCode() == errCode
         e.getErrorMessage() == errMsg
 
-//        cleanup: TODO
+        cleanup:
+        twitter.destroyStatus(id)
     }
 
-    def "Destroy twit"() {
+    def "delete twit"() {
         setup:
         def textOfTwit = 'to delete'
+        Status status = twitter.updateStatus(textOfTwit)
 
         when:
-        def status = twitter.updateStatus(textOfTwit)
         status = twitter.destroyStatus(status.getId())
 
         then:
         status.getText() == textOfTwit
-
-//        cleanup: TODO
     }
 }

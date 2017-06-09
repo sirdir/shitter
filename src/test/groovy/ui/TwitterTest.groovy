@@ -2,32 +2,53 @@ package ui
 
 import geb.Browser
 import geb.driver.CachingDriverFactory
-import geb.navigator.Navigator
+import geb.spock.GebSpec
+import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.ChromeDriver
+import pages.LoginPage
+import pages.MainPage
+import pages.UserFeed
 import spock.lang.*
 
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.ZoneOffset
 
 
-class TwitterTest extends Specification{
+//class TwitterTest extends Specification{
+//
+//    @Shared WebDriver driver
+//
+//    def setup() {
+//        driver = new ChromeDriver() //todo fuckit
+//    }
+//
+//    def cleanup() {
+//        driver.quit()
+//    }
+//
+//    def "Time Line parse"() {
+//        setup:
+//        def expEpoch = ['1496857727000', '1496857682000']
+//        def expRetweetCount = [0, 0]
+//        def expText = ['E = mc^2', 'Привет, Твиттер! #мойпервыйТвит']
+//
+//        expect:
+//        browser.allEpoch == expEpoch
+//        browser.allRetweetCount == expRetweetCount
+//        browser.allText == expText
+//    }
+//
+//
+//}
+class TwitterTest extends GebSpec {
 
     Browser browser
 
     def setup() {
         browser = new Browser(driver: new ChromeDriver())
-        browser.setBaseUrl('https://twitter.com')
-        browser.go()
-        browser.$('#signin-email').value('DronTestius')
-        browser.$('#signin-password').value('b55rkrgn')
-        assert browser.getTitle() == 'Twitter. It\'s what\'s happening.'
-//        browser.drive {
-//            go('https://twitter.com/')
-//            $('#signin-email').value('DronTestius')
-//            $('#signin-password').value('b55rkrgn')
-//            assert title == 'Twitter. It\'s what\'s happening.'
-//        }
+        browser.setBaseUrl('https://twitter.com/')
+        to(LoginPage)
+        at(LoginPage)
+        loginAs('DronTestius', 'b55rkrgn')
+        assert browser.getTitle() == 'Твиттер'
     }
 
     def cleanup() {
@@ -36,35 +57,42 @@ class TwitterTest extends Specification{
     }
 
     def "Time Line parse"() {
-        when:
-        browser.go('/DronTestius')
-        Navigator all = browser.$('#stream-items-id>li')
-        Navigator times = all.$('span._timestamp')
-        println 'xuy'
-        println times.size()
-        println 'pizda'
-//        for (Navigator el : times){
-//            println '-----------'
-//            println el.attr('data-time-ms')
-//            println el.attr('data-time-ms') == LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)*1000
-//            println '-----------'
-//        }
+        setup:
+        def expEpoch = ['1496857727000', '1496857682000']
+        def expRetweetCount = [0, 0]
+        def expText = ['E = mc^2', 'Привет, Твиттер! #мойпервыйТвит']
+        to(UserFeed)
 
-        then:
-        times[0].attr('data-time-ms') == '1496857727000'
-        times[1].attr('data-time-ms') == '1496857682000'
-        browser.getTitle() == "Geb - Very Groovy Browser Automation" //fixme
+        expect:
+        tweets.getAllEpoch() == expEpoch
+        tweets.getAllRetweetCount() == expRetweetCount
+        tweets.getAllText() == expText
     }
 
     def "twit something"(){
-        when:
-        browser.go('/manual/current/')
+        setup:
+        def textOfTwit = 'something'
+        def errMsg = 'You have already sent this Tweet.'
+        browser.to(MainPage)
+        browser.newTweet(textOfTwit)
+//        browser.
 
-        then:
-        browser.$('#driver-quirks').text() == '3.3. Driver quirks'
-   }
+        expect:
+        browser.allEpoch == ['1496857727000', '1496857682000']
+
+        cleanup:
+        browser.$('delete twit')
+
+
+
+
+    }
 
     def "delete twit"() {
+        when:
+        browser.to(UserFeed)
 
+        then:
+        browser.allEpoch == ['1496857727000', '1496857682000']
     }
 }

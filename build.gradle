@@ -13,6 +13,13 @@ repositories {
 dependencies {
     testCompile "org.codehaus.groovy:groovy-all:2.4.11"
     testCompile 'org.twitter4j:twitter4j-core:4.0.6'
-    testCompile 'org.gebish:geb-core:1.1.1'
+    testCompile('org.gebish:geb-core:1.1.1') {
+        exclude module: 'groovy-all'
+//        exclude group: 'org.seleniumhq.selenium'
+    }
     testCompile "org.spockframework:spock-core:1.1-groovy-2.4"
+    testCompile 'org.seleniumhq.selenium:selenium-chrome-driver:2.52.0' // ebanii stid
+//    testCompile 'org.seleniumhq.selenium:selenium-chrome-driver:3.4.0'
+//    testCompile 'org.seleniumhq.selenium:selenium-api:3.4.0'
+//    testCompile 'org.seleniumhq.selenium:selenium-support:3.4.0'
 }

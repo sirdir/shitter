@@ -27,6 +27,7 @@ class TwitterTest extends Specification {
         expect:
         def date = new Date().parse('EEE MMM dd HH:mm:ss zzzz yyyy', dateStr)
         st.getCreatedAt() == date
+        print (new Date().parse('EEE MMM dd HH:mm:ss zzzz yyyy', dateStr).toInstant())
         st.getRetweetCount() == retwit
         st.getText() == text
 

@@ -18,7 +18,7 @@ dependencies {
     testCompile "org.codehaus.groovy:groovy-all:2.4.11"
     testCompile 'org.twitter4j:twitter4j-core:4.0.6'
     testCompile('org.gebish:geb-core:1.1.1') {
-        exclude module: 'groovy-all'
+        exclude group: 'org.codehaus.groovy'
 //        exclude group: 'org.seleniumhq.selenium'
     }
     testCompile 'org.gebish:geb-spock:1.1.1'

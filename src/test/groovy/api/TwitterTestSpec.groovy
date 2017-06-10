@@ -6,7 +6,7 @@ import twitter4j.TwitterException
 import twitter4j.TwitterFactory
 import twitter4j.conf.ConfigurationBuilder
 
-class TwitterTest extends Specification {
+class TwitterTestSpec extends Specification {
 
     @Shared twitter
 

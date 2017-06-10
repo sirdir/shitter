@@ -42,4 +42,22 @@ class TwitModule extends Module{
         })
         return text
     }
+
+    void deleteByIndex(int index) {
+        allTweets.getAt(index).$('.stream-item-header .ProfileTweet-actionButton').click()
+        allTweets.getAt(index).$('.js-actionDelete').click()
+        waitFor(5, 0.1) { $('#delete-tweet-dialog-dialog').isDisplayed() }
+        $('.delete-action').click()
+    }
+
+    void deleteByText(text) {
+        allTweets.forEach({ tweet ->
+            if (tweet.$('p.tweet-text').text() == text){
+                tweet.$('.stream-item-header .ProfileTweet-actionButton').click()
+                tweet.$('.js-actionDelete').click()
+                waitFor(5, 0.1) { $('#delete-tweet-dialog-dialog').isDisplayed() }
+                $('.delete-action').click()
+            }
+        })
+    }
 }

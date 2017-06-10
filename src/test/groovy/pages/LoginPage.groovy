@@ -16,5 +16,4 @@ class LoginPage extends Page{
         pwdInput.value(pwd)
         submitBtn.click()
     }
-
 }

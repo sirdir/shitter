@@ -2,13 +2,17 @@ package api
 
 import spock.lang.*
 import twitter4j.Status
+import twitter4j.Twitter
 import twitter4j.TwitterException
 import twitter4j.TwitterFactory
 import twitter4j.conf.ConfigurationBuilder
 
+@Stepwise
 class TwitterTestSpec extends Specification {
 
-    @Shared twitter
+    @Shared Twitter twitter
+    @Shared textOfTweet = 'something funny'
+    @Shared long id
 
     def setupSpec() {
         def cb = new ConfigurationBuilder()
@@ -23,11 +27,10 @@ class TwitterTestSpec extends Specification {
     }
 
     @Unroll
-    def "Time Line parse"() {
+    def "Time Line"() {
         expect:
         def date = new Date().parse('EEE MMM dd HH:mm:ss zzzz yyyy', dateStr)
         st.getCreatedAt() == date
-//        print (new Date().parse('EEE MMM dd HH:mm:ss zzzz yyyy', dateStr).getTime()) todo
         st.getRetweetCount() == retwit
         st.getText() == text
 
@@ -38,40 +41,35 @@ class TwitterTestSpec extends Specification {
         text << ['E = mc^2', 'Привет, Твиттер! #мойпервыйТвит']
     }
 
-    def "twit something"(){
+    def "tweet something"(){
+        when:
+        Status status = twitter.updateStatus(textOfTweet)
+        id = status.getId()
+
+        then:
+        status
+        status.getText() == textOfTweet
+    }
+
+    def "duplicate tweet"() {
         setup:
-        def textOfTwit = 'something'
         def errCode = 403
         def errMsg = 'Status is a duplicate.'
 
         when:
-        Status status = twitter.updateStatus(textOfTwit)
-        def id = status.getId()
-
-        then:
-        status
-
-        when:
-        twitter.updateStatus(textOfTwit)
+        twitter.updateStatus(textOfTweet)
 
         then:
         def e = thrown(TwitterException)
         e.getStatusCode() == errCode
         e.getErrorMessage() == errMsg
-
-        cleanup:
-        twitter.destroyStatus(id)
     }
 
-    def "delete twit"() {
-        setup:
-        def textOfTwit = 'to delete'
-        Status status = twitter.updateStatus(textOfTwit)
-
+    def "delete tweet"() {
         when:
-        status = twitter.destroyStatus(status.getId())
+        Status status = twitter.destroyStatus(id)
 
         then:
-        status.getText() == textOfTwit
+        status.getText() == textOfTweet
     }
 }

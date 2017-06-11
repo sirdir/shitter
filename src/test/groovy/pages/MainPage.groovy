@@ -7,8 +7,6 @@ import pages.modules.TwitModule
 
 class MainPage extends Page{
 
-    static url = '/'
-
     static at = { title == 'Twitter' }
 
     static content = {
@@ -23,6 +21,6 @@ class MainPage extends Page{
         twitTextArea.click()
         twitTextArea.singleElement().sendKeys(text)
         btnTweet.click()
-        waitFor(5, 0.5) { browser.driver.executeScript('return $.active') == 0}
+        waitFor() { browser.driver.executeScript('return $.active') == 0}
     }
 }

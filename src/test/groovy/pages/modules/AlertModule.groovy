@@ -10,7 +10,7 @@ class AlertModule extends Module{
     }
 
     def getText() {
-        waitFor(5, 0.5) { ['46px', '0px'].contains(popup.css('top')) }
+        waitFor() { ['46px', '0px'].contains(popup.css('top')) }
         message.text()
     }
 }

@@ -12,7 +12,7 @@ class HeaderModule extends Module{
 
     void newTweet(text) {
         tweetBtn.click()
-        waitFor(5, 0.5) { popup.isDisplayed() }
+        waitFor() { popup.isDisplayed() }
         twitTextArea.singleElement().sendKeys(text)
         popup.$('.js-tweet-btn').click()
     }

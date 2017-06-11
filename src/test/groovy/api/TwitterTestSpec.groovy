@@ -11,10 +11,22 @@ import twitter4j.conf.ConfigurationBuilder
 class TwitterTestSpec extends Specification {
 
     @Shared Twitter twitter
-    @Shared textOfTweet = 'something funny'
+
+    @Shared String textOfNewTweet
+    @Shared epoch
+    @Shared retweetCount
+    @Shared textOfTweets
+
     @Shared long id
 
     def setupSpec() {
+        def config = new ConfigSlurper()
+                .parse(new File('build/resources/test/GebConfig.groovy').toURI().toURL())
+        textOfNewTweet = config.textOfNewTweet
+        epoch = config.epoch
+        retweetCount = config.retweetCount
+        textOfTweets = config.textOfTweets
+
         def cb = new ConfigurationBuilder()
         cb.setDebugEnabled(true)
                 .setOAuthConsumerKey('gzY5BWKxHN5SfBhDgZ5Q28Aqm')
@@ -29,26 +41,26 @@ class TwitterTestSpec extends Specification {
     @Unroll
     def "Time Line"() {
         expect:
-        def date = new Date().parse('EEE MMM dd HH:mm:ss zzzz yyyy', dateStr)
+        def date = new Date(epochExp)
         st.getCreatedAt() == date
-        st.getRetweetCount() == retwit
-        st.getText() == text
+        st.getRetweetCount() == retweetExp
+        st.getText() == textExp
 
         where:
         st << twitter.getHomeTimeline()
-        dateStr << ['Wed Jun 07 20:48:47 EEST 2017', 'Wed Jun 07 20:48:02 EEST 2017']
-        retwit << [0, 0]
-        text << ['E = mc^2', 'Привет, Твиттер! #мойпервыйТвит']
+        epochExp << epoch
+        retweetExp << retweetCount
+        textExp << textOfTweets
     }
 
     def "tweet something"(){
         when:
-        Status status = twitter.updateStatus(textOfTweet)
+        Status status = twitter.updateStatus(textOfNewTweet)
         id = status.getId()
 
         then:
         status
-        status.getText() == textOfTweet
+        status.getText() == textOfNewTweet
     }
 
     def "duplicate tweet"() {
@@ -57,7 +69,7 @@ class TwitterTestSpec extends Specification {
         def errMsg = 'Status is a duplicate.'
 
         when:
-        twitter.updateStatus(textOfTweet)
+        twitter.updateStatus(textOfNewTweet)
 
         then:
         def e = thrown(TwitterException)
@@ -70,6 +82,6 @@ class TwitterTestSpec extends Specification {
         Status status = twitter.destroyStatus(id)
 
         then:
-        status.getText() == textOfTweet
+        status.getText() == textOfNewTweet
     }
 }

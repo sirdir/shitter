@@ -4,51 +4,52 @@ import geb.driver.CachingDriverFactory
 import geb.spock.GebSpec
 import pages.LoginPage
 import pages.MainPage
-import pages.UserFeed
+
 import spock.lang.Shared
 import spock.lang.Stepwise
 
 @Stepwise
 class TwitterTestSpec extends GebSpec {
 
-//    @Shared Browser browser = new Browser(driver: new ChromeDriver())
-    @Shared textOfTweet = 'something'
+    @Shared login = browser.config.rawConfig.login
+    @Shared password = browser.config.rawConfig.password
+
+    @Shared textOfNewTweet = browser.config.rawConfig.textOfNewTweet
+    @Shared epoch = browser.config.rawConfig.epoch
+    @Shared retweetCount = browser.config.rawConfig.retweetCount
+    @Shared textOfTweets = browser.config.rawConfig.textOfTweets
 
     def setupSpec() {
-//        System.setProperty('geb.build.baseUrl', 'https://twitter.com/')
-        getDriver().manage().window().maximize()
         to(LoginPage)
         at(LoginPage)
-        loginAs('DronTestius', 'b55rkrgn')
+        loginAs(login, password)
         via(MainPage)
         at(MainPage)
     }
     def cleanupSpec() {
         via(MainPage)
-        tweets.deleteByText(textOfTweet)
-        browser.quit()
+        tweets.deleteByText(textOfNewTweet)
+        CachingDriverFactory.clearCacheAndQuitDriver()
     }
 
-    def "Time Line parse"() {
+    def "Time Line"() {
         setup:
-        def expEpoch = ['1496857727000', '1496857682000']
-        def expRetweetCount = [0, 0]
-        def expText = ['E = mc^2', 'Привет, Твиттер! #мойпервыйТвит']
-        to(UserFeed)
+        epoch.eachWithIndex({ it, index -> epoch[index] = it.toString()})
+        via(MainPage)
 
         expect:
-        tweets.getAllEpoch() == expEpoch
-        tweets.getAllRetweetCount() == expRetweetCount
-        tweets.getAllText() == expText
+        tweets.getAllEpoch() == epoch
+        tweets.getAllRetweetCount() == retweetCount
+        tweets.getAllText() == textOfTweets
     }
 
     def "tweet something"(){
         when:
         via(MainPage)
-        newTweet(textOfTweet)
+        newTweet(textOfNewTweet)
 
         then:
-        tweets.getAllText().get(0) == textOfTweet
+        tweets.getAllText().get(0) == textOfNewTweet
     }
 
     def "tweet duplication"() {
@@ -57,7 +58,7 @@ class TwitterTestSpec extends GebSpec {
         def duplicateMsg = 'You have already sent this Tweet.'
 
         when:
-        newTweet(textOfTweet)
+        newTweet(textOfNewTweet)
 
         then:
         alert.getText() == duplicateMsg
@@ -69,7 +70,7 @@ class TwitterTestSpec extends GebSpec {
         def deleteMsg = 'Your Tweet has been deleted.'
 
         when:
-        tweets.deleteByText(textOfTweet)
+        tweets.deleteByText(textOfNewTweet)
 
         then:
         alert.getText() == deleteMsg

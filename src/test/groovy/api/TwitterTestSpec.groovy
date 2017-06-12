@@ -29,10 +29,10 @@ class TwitterTestSpec extends Specification {
 
         def cb = new ConfigurationBuilder()
         cb.setDebugEnabled(true)
-                .setOAuthConsumerKey('gzY5BWKxHN5SfBhDgZ5Q28Aqm')
-                .setOAuthConsumerSecret('BBEg3mDMqueq5Ao27NswXTHV37gzWhzimbpJCSGXn3GhkMp6kK')
-                .setOAuthAccessToken('872191270000750592-sWRY3JaZ6mlnR2Ryc9TCEMsEwhB5qpH')
-                .setOAuthAccessTokenSecret('WLjXUrWTXlpJx5f1R6wzZnSFMZWRJEGlqWOXXjW9B2tv7')
+                .setOAuthConsumerKey(config.cKey)
+                .setOAuthConsumerSecret(config.cSecret)
+                .setOAuthAccessToken(config.aToken)
+                .setOAuthAccessTokenSecret(config.aTokenSecret)
         TwitterFactory tf = new TwitterFactory(cb.build())
         twitter = tf.getInstance()
         assert twitter

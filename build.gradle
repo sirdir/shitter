@@ -12,6 +12,7 @@ repositories {
 
 test{
     testLogging.showStandardStreams = true
+    include ((System.getProperty('type') ?: '**') + '/**')
 }
 
 dependencies {
@@ -19,14 +20,12 @@ dependencies {
     testCompile 'org.twitter4j:twitter4j-core:4.0.6'
     testCompile('org.gebish:geb-core:1.1.1') {
         exclude group: 'org.codehaus.groovy'
-//        exclude group: 'org.seleniumhq.selenium'
+        exclude group: 'org.seleniumhq.selenium'
     }
     testCompile 'org.gebish:geb-spock:1.1.1'
     testCompile ('org.spockframework:spock-core:1.1-groovy-2.4') {
         exclude group: 'org.codehaus.groovy'
     }
-//    testCompile 'org.seleniumhq.selenium:selenium-chrome-driver:2.52.0' // ebaniy stid
     testCompile 'org.seleniumhq.selenium:selenium-chrome-driver:3.4.0'
-//    testCompile 'org.seleniumhq.selenium:selenium-api:3.4.0'
-//    testCompile 'org.seleniumhq.selenium:selenium-support:3.4.0'
+    testCompile 'io.github.bonigarcia:webdrivermanager:1.6.2'
 }

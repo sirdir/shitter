@@ -43,7 +43,7 @@ class TwitterTestSpec extends GebSpec {
         tweets.getAllText() == textOfTweets
     }
 
-    def "tweet something"(){
+    def "tweet something"() {
         when:
         via(MainPage)
         newTweet(textOfNewTweet)

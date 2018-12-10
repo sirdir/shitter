@@ -5,7 +5,7 @@ import pages.modules.AlertModule
 import pages.modules.HeaderModule
 import pages.modules.TwitModule
 
-class MainPage extends Page{
+class MainPage extends Page {
 
     static at = { title == 'Twitter' }
 

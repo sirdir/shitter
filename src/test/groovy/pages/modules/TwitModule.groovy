@@ -2,7 +2,7 @@ package pages.modules
 
 import geb.Module
 
-class TwitModule extends Module{
+class TwitModule extends Module {
 
     static content = {
         allTweets { $('#stream-items-id>li') }

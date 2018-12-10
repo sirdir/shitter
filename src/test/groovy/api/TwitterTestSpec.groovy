@@ -53,7 +53,7 @@ class TwitterTestSpec extends Specification {
         textExp << textOfTweets
     }
 
-    def "tweet something"(){
+    def "tweet something"() {
         when:
         Status status = twitter.updateStatus(textOfNewTweet)
         id = status.getId()

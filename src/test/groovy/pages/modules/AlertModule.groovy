@@ -2,7 +2,7 @@ package pages.modules
 
 import geb.Module
 
-class AlertModule extends Module{
+class AlertModule extends Module {
 
     static content = {
         popup { $('#message-drawer') }
